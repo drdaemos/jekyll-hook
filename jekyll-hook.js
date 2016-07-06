@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var config  = require('./config.json');
+var bodyParser = require('body-parser');
 var fs      = require('fs');
 var express = require('express');
 var app     = express();
@@ -11,7 +12,7 @@ var email   = require('emailjs/email');
 var mailer  = email.server.connect(config.email);
 var crypto  = require('crypto');
 
-app.use(express.bodyParser({
+app.use(bodyParser.json({
     verify: function(req,res,buffer){
         if(!req.headers['x-hub-signature']){
             return;
@@ -21,10 +22,10 @@ app.use(express.bodyParser({
             console.log("Recieved a X-Hub-Signature header, but cannot validate as no secret is configured");
             return;
         }
-
-        var hmac         = crypto.createHmac('sha1', config.secret);
+	
+	var hmac         = crypto.createHmac('sha1', config.secret);
         var recieved_sig = req.headers['x-hub-signature'].split('=')[1];
-        var computed_sig = hmac.update(buffer).digest('hex');
+	var computed_sig = hmac.update(buffer).digest('hex');
 
         if(recieved_sig != computed_sig){
             console.warn('Recieved an invalid HMAC: calculated:' + computed_sig + ' != recieved:' + recieved_sig);
@@ -46,6 +47,11 @@ app.post('/hooks/jekyll/*', function(req, res) {
         var data = req.body;
         var branch = req.params[0];
         var params = [];
+	
+	if (data.zen) {
+		console.log('Got test webhook');
+		return;
+	}
 
         // Parse webhook data for internal variables
         data.repo = data.repository.name;
@@ -60,7 +66,7 @@ app.post('/hooks/jekyll/*', function(req, res) {
         }
 
         // End early if not permitted branch
-        if (data.branch !== branch) {
+	if (false) {
             console.log('Not ' + branch + ' branch.');
             if (typeof cb === 'function') cb();
             return;
@@ -141,7 +147,7 @@ app.post('/hooks/jekyll/*', function(req, res) {
 });
 
 // Start server
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 9000;
 app.listen(port);
 console.log('Listening on port ' + port);
 
