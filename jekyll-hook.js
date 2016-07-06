@@ -13,6 +13,7 @@ var mailer  = email.server.connect(config.email);
 var crypto  = require('crypto');
 
 app.use(bodyParser.json({
+    limit: '10mb',
     verify: function(req,res,buffer){
         if(!req.headers['x-hub-signature']){
             return;
