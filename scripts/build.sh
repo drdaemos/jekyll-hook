@@ -24,6 +24,7 @@ git pull origin $branch
 cd -
 
 # Run jekyll
+export LANG=en_US.UTF-8
 cd $source
 /home/ubuntu/.rvm/gems/ruby-2.3.0/wrappers/jekyll build -s $source -d $build
 cd -
