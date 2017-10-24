@@ -14,18 +14,19 @@ build=$6
 
 # Check to see if repo exists. If not, git clone it
 if [ ! -d $source ]; then
-    git clone $giturl $source
+    git clone $giturl "$source"
 fi
 
 # Git checkout appropriate branch, pull latest code
 cd $source
 git checkout $branch
+git fetch
+git reset --hard origin/$branch
 git pull origin $branch
 cd -
 
 # Run jekyll
 export LANG=en_US.UTF-8
 cd $source
-bundle install
-/home/ubuntu/.rvm/gems/ruby-2.2.3/wrappers/jekyll build -s $source -d $build
+bundle exec jekyll build -s $source -d $build
 cd -

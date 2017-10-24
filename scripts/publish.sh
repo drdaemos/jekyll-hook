@@ -20,6 +20,6 @@ site="/www/html"
 
 shopt -s extglob
 echo "$build | $site"
-rm -rfv $site/!(*html*|*info*)
-mkdir $site/$repo
-mv $build/* $site/$repo/
+/bin/rm -rf $site/$repo
+/bin/mkdir -p $site/$repo
+/bin/mv $build/* $site/$repo/

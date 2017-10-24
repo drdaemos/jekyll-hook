@@ -149,7 +149,7 @@ app.post('/hooks/jekyll/*', function(req, res) {
 
 // Start server
 var port = process.env.PORT || 9000;
-app.listen(port);
+app.listen(port, '127.0.0.1');
 console.log('Listening on port ' + port);
 
 function run(file, params, cb) {
